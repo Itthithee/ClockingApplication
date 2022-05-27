@@ -19,6 +19,7 @@ export type RootStackParamList = {
   NotFound: undefined;
   Home: undefined;
   PersonalInfo: {title : string};
+  Camera: undefined|{id: number};
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<

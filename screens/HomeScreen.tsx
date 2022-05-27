@@ -12,7 +12,7 @@ export default function HomeScreen({ navigation }: RootStackScreenProps<'Home'>)
     useEffect(()=>{
         dispatch({type:'FETCHING_ITEMS'})
         new Promise((resolve)=>{
-            setTimeout(resolve,1500)
+            setTimeout(resolve,500)
         }).then(()=>{
             dispatch({type:'FETCHING_SUCCESS',payload:mockData2})
             return
