@@ -7,7 +7,7 @@ import Navigation from './navigation';
 import { ApplicationProvider, Layout, Text, IconRegistry } from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import * as eva from '@eva-design/eva';
-import {SearchProvider} from './screens/HomeScreen';
+import ContextProvider from './store/ProviderComposer';
 export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
@@ -19,12 +19,12 @@ export default function App() {
       <>
       <IconRegistry icons={EvaIconsPack} />
       <ApplicationProvider {...eva} theme={eva.dark}>
-        <SearchProvider>
+        <ContextProvider>
         <SafeAreaProvider>
           <Navigation colorScheme={colorScheme} />
           <StatusBar />
         </SafeAreaProvider>
-        </SearchProvider>
+        </ContextProvider>
       </ApplicationProvider>
       </>
     );
