@@ -10,10 +10,10 @@ const initialState = {
 };
 function clockingReducer(state = initialState, {type,payload}: any ){
     switch (type){
-        case 'START_CLOCKING':
+        case 'SELECT_USER':
             return {
                 ...state,
-                userId: payload
+                userData: payload
             }
         case 'TAKING_PHOTO':
             return {
@@ -30,9 +30,9 @@ function clockingReducer(state = initialState, {type,payload}: any ){
 }
 
 export function ClockingProvider({children} : {children? : React.ReactElement}){
-    const [state,dispatch] = useReducer(clockingReducer,initialState)
+    const [clockingState,clockingDispatch] = useReducer(clockingReducer,initialState)
     return(
-        <ClockingContext.Provider value={{state,dispatch}}>
+        <ClockingContext.Provider value={{clockingState,clockingDispatch}}>
             {children}
         </ClockingContext.Provider>
     )

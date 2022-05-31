@@ -5,16 +5,17 @@ import { Text, View } from '../components/Themed';
 import { RootStackScreenProps } from '../types';
 import { Divider, List, ListItem, Input, Icon} from '@ui-kitten/components';
 import {SearchContext} from '../store/SearchStore'
+import { ClockingContext } from '../store/ClockingStore';
 export default function HomeScreen({ navigation }: RootStackScreenProps<'Home'>) {
 
-    const {state,dispatch} = useContext(SearchContext)
-    const {isFetching} = state
+    const {searchState,searchDispatch} = useContext(SearchContext)
+    const {isFetching} = searchState
     useEffect(()=>{
-        dispatch({type:'FETCHING_ITEMS'})
+        searchDispatch({type:'FETCHING_ITEMS'})
         new Promise((resolve)=>{
             setTimeout(resolve,500)
         }).then(()=>{
-            dispatch({type:'FETCHING_SUCCESS',payload:mockData2})
+            searchDispatch({type:'FETCHING_SUCCESS',payload:mockData2})
             return
         })
     },[])
@@ -44,105 +45,51 @@ export default function HomeScreen({ navigation }: RootStackScreenProps<'Home'>)
 }
 const mockData2 = [
     {
-        title: 'one',
+        userId: 1,
+        name: 'one',
         description: 'lorenipsum'
     },
     {
-        title: 'two',
+        userId: 2,
+        name: 'two',
         description: 'lorenipsum'
     },
     {
-        title: 'three',
+        userId: 3,
+        name: 'three',
         description: 'lorenipsum'
     },
     {
-        title: 'four',
+        userId: 4,
+        name: 'four',
         description: 'lorenipsum'
     },
     {
-        title: 'one',
-        description: 'lorenipsum'
-    },
-    {
-        title: 'two',
-        description: 'lorenipsum'
-    },
-    {
-        title: 'three',
-        description: 'lorenipsum'
-    },
-    {
-        title: 'four',
-        description: 'lorenipsum'
-    },
-    {
-        title: 'one',
-        description: 'lorenipsum'
-    },
-    {
-        title: 'two',
-        description: 'lorenipsum'
-    },
-    {
-        title: 'three',
-        description: 'lorenipsum'
-    },
-    {
-        title: 'four',
-        description: 'lorenipsum'
-    },
-    {
-        title: 'one',
-        description: 'lorenipsum'
-    },
-    {
-        title: 'two',
-        description: 'lorenipsum'
-    },
-    {
-        title: 'three',
-        description: 'lorenipsum'
-    },
-    {
-        title: 'four',
-        description: 'lorenipsum'
-    },
-    {
-        title: 'one',
-        description: 'lorenipsum'
-    },
-    {
-        title: 'two',
-        description: 'lorenipsum'
-    },
-    {
-        title: 'three',
-        description: 'lorenipsum'
-    },
-    {
-        title: 'four',
+        userId: 5,
+        name: 'five',
         description: 'lorenipsum'
     },
 ]
-const mockData = new Array(8).fill({
-    title: 'Item',
-    description: 'Description for Item',
-  });
+
 const ListDividersShowcase = ({navigation}: RootStackScreenProps<'Home'>) => {
 
-    const {state,dispatch} = useContext(SearchContext)
-    const {filteredItems} = state
+    const {searchState} = useContext(SearchContext)
+    const {filteredItems} = searchState
+    const {clockingDispatch} = useContext(ClockingContext);
     const renderItemIcon = (props: any) => (
         <Icon {...props} name='person'/>
       );
     const renderItemRight = (props: any) =>(
         <Icon {...props} name='arrow-ios-forward-outline'/>
     )
-    const renderItem = ({ item , index } : {item :{title : string, description : string }; index : number}) => (
+    const renderItem = ({ item , index } : {item :{name : string, description : string }; index : number}) => (
       <ListItem
-        title={`${item.title} ${index + 1}`}
-        description={`${item.description} ${index + 1}`}
-        onPress={()=>navigation.push('PersonalInfo',{title: item.title})}
+        title={`${item.name}`}
+        description={`${item.description}`}
+        onPress={()=>{
+            navigation.push('PersonalInfo')
+            clockingDispatch({type: 'SELECT_USER', payload: item,})
+        }}
         accessoryLeft={renderItemIcon}
         accessoryRight={renderItemRight}
       />
@@ -158,12 +105,12 @@ const ListDividersShowcase = ({navigation}: RootStackScreenProps<'Home'>) => {
 
 const SearchBox = () => {
     const [value, setValue] = useState('');
-    const {state,dispatch} = useContext(SearchContext)
+    const {searchDispatch} = useContext(SearchContext)
     useEffect(()=>{
         if(value === ''){
-            dispatch({type:'SHOW_ALL_ITEMS'})
+            searchDispatch({type:'SHOW_ALL_ITEMS'})
         }else{
-            dispatch({type:'SHOW_FILTERED_ITEMS',payload:value})
+            searchDispatch({type:'SHOW_FILTERED_ITEMS',payload:value})
         }
         
     },[value])

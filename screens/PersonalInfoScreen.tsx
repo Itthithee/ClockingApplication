@@ -3,11 +3,13 @@ import { RootStackScreenProps } from '../types';
 import { View } from '../components/Themed';
 import React from 'react';
 import { Avatar, Button, Icon, Text } from '@ui-kitten/components';
+import {ClockingContext} from '../store/ClockingStore'
 // import {Svg} from 'expo';
 
 const image = { uri: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__480.png"}
 export default function PersonalInfoScreen({route,navigation}: RootStackScreenProps<'PersonalInfo'>){
-    const { title } = route.params;
+    const {clockingState,clockingDispatch} = React.useContext(ClockingContext)
+    const { userData } =  clockingState
     const CheckIcon = (props : any)=>(
         <Icon {...props} name="checkmark-circle-outline" />
     )
@@ -15,7 +17,7 @@ export default function PersonalInfoScreen({route,navigation}: RootStackScreenPr
         <View style={styles.container}>
         <ImageBackground source={null} resizeMode="cover" style={styles.top}>
             <Image source={image} style={styles.avatar}/>
-            <Text style={styles.title}>{`${title}`}</Text>
+            <Text style={styles.title}>{`${userData.name}`}</Text>
             <View style={styles.infoContainer}>
                 <View style={styles.subInfo}>
                     <Text category='s2' style={styles.textInfo}>0</Text>

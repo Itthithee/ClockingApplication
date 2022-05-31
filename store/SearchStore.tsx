@@ -37,9 +37,9 @@ const searchReducer = (state = initialState, {type,payload}:any )=>{
 }
 
 export function SearchProvider({children} : {children? : JSX.Element}){
-    const [state,dispatch] = useReducer(searchReducer,initialState)
+    const [searchState,searchDispatch] = useReducer(searchReducer,initialState)
     return(
-        <SearchContext.Provider value={{state,dispatch}}>
+        <SearchContext.Provider value={{searchState,searchDispatch}}>
             {children}
         </SearchContext.Provider>
     )
