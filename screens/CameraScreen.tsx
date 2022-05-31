@@ -5,6 +5,7 @@ import React from 'react';
 import { Avatar, Button, Icon, Text } from '@ui-kitten/components';
 import { Camera, } from 'expo-camera';
 import * as FaceDetector from 'expo-face-detector';
+import {ClockingContext} from '../store/ClockingStore'
 
 export default function CameraScreen({route,navigation}: RootStackScreenProps<'Camera'>){
     const [hasPermission, setHasPermission]= React.useState<boolean|null>(null);
@@ -13,9 +14,13 @@ export default function CameraScreen({route,navigation}: RootStackScreenProps<'C
     const [isBlink, setIsBlink] = React.useState<boolean>(false);
     const [isEyeClosed, setIsEyeClosed] = React.useState<boolean|null>(null)
     const [isEyeOpen, setIsEyeOpen] = React.useState<boolean|null>(null)
-    const cameraRef = React.useRef(null);
+    const cameraRef = React.useRef<null|any>(null);
+    const [imageURI, setImageURI] = React.useState<{}|null>(null);
+    const {clockingDispatch} = React.useContext(ClockingContext);
 
     React.useEffect(() => {
+      setImageURI(null);
+      setIsBlink(false);
       (async () => {
         const { status } = await Camera.requestCameraPermissionsAsync();
         setHasPermission(status === 'granted');
@@ -44,15 +49,25 @@ export default function CameraScreen({route,navigation}: RootStackScreenProps<'C
         }
     }, [faceData])
     React.useEffect(() => {
-        (async () => {
-        if(!isBlink) return;
-        if(cameraRef!== null && cameraRef.current !== null){
+      takePicture();
+    }, [isBlink]);
+
+    const takePicture = async() => {
+      if(!isBlink) return;
+        new Promise((resolve)=>{
+          setTimeout(resolve,500)
+        }).then(async()=>{
+          if(cameraRef!== null && cameraRef.current !== null){
             const data = await cameraRef.current.takePictureAsync();
-            console.log(data)
-        }
-        })();
-      }, [isBlink]);
-    const takePicture = () => {
+            // console.log(data)
+            if(data&&data.uri){
+              setImageURI({uri: data.uri})
+              clockingDispatch({type: 'TAKING_PHOTO', payload: data.uri})
+            }
+            
+          }
+        })
+        
     }
     if (hasPermission === null) {
       return <View />;
@@ -60,7 +75,12 @@ export default function CameraScreen({route,navigation}: RootStackScreenProps<'C
     if (hasPermission === false) {
       return <Text>No access to camera</Text>;
     }
-    return (
+    if(imageURI) return(
+      <View style={styles.container}>
+        <Image source={imageURI} style={styles.imageFrame}/>
+      </View>
+    )
+    else return (
       <View style={styles.container}>
         <Camera 
         ref={cameraRef}
@@ -110,5 +130,8 @@ const styles = StyleSheet.create({
     text: {
       fontSize: 18,
       color: 'white',
+    },
+    imageFrame: {
+      flex: 1,
     },
   });
