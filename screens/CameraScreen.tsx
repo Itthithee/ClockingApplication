@@ -12,20 +12,28 @@ export default function CameraScreen({route,navigation}: RootStackScreenProps<'C
     const [type, setType] = React.useState(Camera.Constants.Type.front);
     const [faceData, setFaceData] = React.useState<FaceDetector.FaceFeature[]>([]);
     const [isBlink, setIsBlink] = React.useState<boolean>(false);
-    const [isEyeClosed, setIsEyeClosed] = React.useState<boolean|null>(null)
-    const [isEyeOpen, setIsEyeOpen] = React.useState<boolean|null>(null)
+    const [isEyeClosed, setIsEyeClosed] = React.useState<boolean|null>(null);
+    const [isEyeOpen, setIsEyeOpen] = React.useState<boolean|null>(null);
     const cameraRef = React.useRef<null|any>(null);
     const [imageURI, setImageURI] = React.useState<{}|null>(null);
     const {clockingDispatch} = React.useContext(ClockingContext);
 
     React.useEffect(() => {
-      setImageURI(null);
-      setIsBlink(false);
       (async () => {
         const { status } = await Camera.requestCameraPermissionsAsync();
         setHasPermission(status === 'granted');
       })();
     }, []);
+
+    React.useEffect(()=> {
+      const eventListener = navigation.addListener('focus', () => {
+        setImageURI(null);
+        setIsBlink(false);
+        setIsEyeClosed(false);
+        setIsEyeOpen(false);
+      });
+      return eventListener
+    })
     const handleFacesDetected = ({ faces }: {faces : FaceDetector.FaceFeature[]} ) => {
         setFaceData(faces)
         //console.log(faces);
@@ -62,10 +70,12 @@ export default function CameraScreen({route,navigation}: RootStackScreenProps<'C
             // console.log(data)
             if(data&&data.uri){
               setImageURI({uri: data.uri})
-              clockingDispatch({type: 'TAKING_PHOTO', payload: data.uri})
+              clockingDispatch({type: 'TAKING_PHOTO', payload: {uri: data.uri}})
             }
             
           }
+        }).then(()=>{
+          navigation.push('ConfirmClocking')
         })
         
     }

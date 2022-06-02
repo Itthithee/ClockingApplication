@@ -15,7 +15,7 @@ export default function PersonalInfoScreen({route,navigation}: RootStackScreenPr
     )
     return (
         <View style={styles.container}>
-        <ImageBackground source={null} resizeMode="cover" style={styles.top}>
+        <ImageBackground source={{uri : null}} resizeMode="cover" style={styles.top}>
             <Image source={image} style={styles.avatar}/>
             <Text style={styles.title}>{`${userData.name}`}</Text>
             <View style={styles.infoContainer}>

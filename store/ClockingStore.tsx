@@ -2,7 +2,7 @@ import {createContext, useReducer} from 'react';
 
 export const ClockingContext = createContext<any>({})
 const initialState = {
-    imageURI: '',
+    imageURI: {uri: ''},
     userId: '',
     clockingState: '',
     timeStamp: '',

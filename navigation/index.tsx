@@ -22,6 +22,7 @@ import PersonalInfoScreen from '../screens/PersonalInfoScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 import CameraScreen from '../screens/CameraScreen';
+import ConfirmClockingScreen from '../screens/ConfirmClockingScreen';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -44,7 +45,8 @@ function RootNavigator() {
     <Stack.Navigator>
       <Stack.Screen name="Root" component={HomeScreen} options={{ headerShown: true }} />
       <Stack.Screen name="PersonalInfo" component={PersonalInfoScreen} options={{ headerShown: true }} />
-      <Stack.Screen name="Camera" component={CameraScreen} options={{ title: 'Oops!' }} />
+      <Stack.Screen name="Camera" component={CameraScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="ConfirmClocking" component={ConfirmClockingScreen} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
       </Stack.Group>
